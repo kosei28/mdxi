@@ -59,7 +59,7 @@ export default defineConfig({
 {
   "scripts": { "dev": "vite", "check": "mdxi check" },
   "dependencies": { "mdxi": "^1.0.0", "react": "^19.0.0", "react-dom": "^19.0.0" },
-  "devDependencies": { "vite": "^7.0.0", "typescript": "^5.0.0" }
+  "devDependencies": { "vite": "^8.0.0", "typescript": "^5.0.0" }
 }
 ```
 

@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 const [port = "5199", dir = "examples/basic"] = process.argv.slice(2);
 const base = `http://localhost:${port}`;
 const file = path.resolve(dir, "docs/welcome.mdx");
+const memberList = path.resolve(dir, "src/components/MemberList.tsx");
 const original = fs.readFileSync(file, "utf8");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const waitFor = async (fn, ms = 5000) => {
@@ -100,6 +101,44 @@ try {
   await waitFor(async () => /Nope/.test(await page.locator(".mdxi-error").first().textContent()), 10000);
   console.log("import error:", (await page.locator(".mdxi-error").first().textContent()).slice(0, 200));
 
+  // ArrayScope: a list component made with useValue (SPEC §4.2)
+  fs.writeFileSync(memberList, `import { useValue } from "mdxi";
+import { ArrayScope, TextInput } from "mdxi/components";
+export function MemberList({ name }: { name: string }) {
+  const [rows, setRows] = useValue<object[]>(name, []);
+  return (
+    <ArrayScope name={name}>
+      {rows.map((_, i) => (
+        <ArrayScope.Item index={i} key={i}>
+          <TextInput name="name" label={"名前" + i} />
+          <button onClick={() => setRows(rows.filter((_, j) => j !== i))}>削除{i}</button>
+        </ArrayScope.Item>
+      ))}
+      <button onClick={() => setRows([...rows, {}])}>追加</button>
+      <TextInput name="oops" label="外" />
+    </ArrayScope>
+  );
+}
+`);
+  fs.writeFileSync(extra, `import { MemberList } from "@/components/MemberList"\nimport { ArrayScope } from "mdxi/components"\n\n# Members\n\n<MemberList name="members" />\n\n<ArrayScope.Item index={0}>x</ArrayScope.Item>\n`);
+  await page.getByRole("heading", { name: "Members" }).waitFor({ timeout: 10000 });
+  const errors = await page.locator(".mdxi-error").allTextContents();
+  assert.ok(errors.some((t) => t.includes("ArrayScope.Item の外")), errors.join("|"));
+  assert.ok(errors.some((t) => t.includes("ArrayScope.Item は ArrayScope の中に")), errors.join("|"));
+  // remove the misplaced input and use the list
+  fs.writeFileSync(memberList, fs.readFileSync(memberList, "utf8").replace('<TextInput name="oops" label="外" />', ""));
+  await page.getByRole("button", { name: "追加" }).waitFor({ timeout: 10000 });
+  await page.getByRole("button", { name: "追加" }).click();
+  await page.getByRole("button", { name: "追加" }).click();
+  await page.getByLabel("名前0").fill("佐藤");
+  await page.getByLabel("名前1").fill("鈴木");
+  await waitFor(() => fs.readFileSync(extra, "utf8").includes("鈴木"));
+  await page.getByRole("button", { name: "削除0" }).click();
+  await waitFor(() => !fs.readFileSync(extra, "utf8").includes("佐藤"));
+  await sleep(500);
+  assert.ok(/members:\n\s+- name: 鈴木\n---/.test(fs.readFileSync(extra, "utf8")), fs.readFileSync(extra, "utf8"));
+  assert.equal(await page.getByLabel("名前0").inputValue(), "鈴木");
+
   fs.rmSync(path.dirname(extra), { recursive: true });
   await waitFor(async () => (await page.getByRole("link", { name: "extra.mdx" }).count()) === 0);
   console.log("OK");
@@ -110,5 +149,6 @@ try {
 } finally {
   fs.writeFileSync(file, original);
   fs.rmSync(path.resolve(dir, "docs/sub"), { recursive: true, force: true });
+  fs.rmSync(memberList, { force: true });
   await browser.close();
 }
