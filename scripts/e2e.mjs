@@ -79,7 +79,7 @@ try {
   // file tree: add / remove
   const extra = path.resolve(dir, "docs/sub/extra.mdx");
   fs.mkdirSync(path.dirname(extra), { recursive: true });
-  fs.writeFileSync(extra, `import { TextInput } from "mdxi/components"\n\n# Extra\n\n<TextInput name="a" label="A" />\n\n<TextInput name="a" label="B" />\n\n{props.values.boom.x}\n`);
+  fs.writeFileSync(extra, `import { TextInput } from "mdxi/components"\nimport { Rating } from "@/components/Rating"\n\n# Extra\n\n<TextInput name="a" label="A" />\n\n<TextInput name="a" label="B" />\n\n<Rating name="r" />\n\n<Rating name="r" />\n\n{props.values.boom.x}\n`);
   await page.getByRole("link", { name: "extra.mdx" }).waitFor({ timeout: 5000 });
   await page.getByRole("link", { name: "extra.mdx" }).click();
   await page.getByRole("heading", { name: "Extra" }).waitFor();
@@ -87,6 +87,8 @@ try {
   // duplicate names → both inputs show an error; runtime error shown in place
   await waitFor(async () => (await page.locator(".mdxi-field-error").count()) === 2);
   assert.ok(await page.getByText("name が重複しています").isVisible());
+  // custom components get the error from useField
+  await waitFor(async () => (await page.getByText('name "r" の入力が複数あります', { exact: false }).count()) === 2);
   assert.ok((await page.locator(".mdxi-error").allTextContents()).some((t) => /boom|undefined/.test(t)));
   await page.getByRole("textbox", { name: "A", exact: true }).fill("x");
   await sleep(800);
@@ -101,11 +103,11 @@ try {
   await waitFor(async () => /Nope/.test(await page.locator(".mdxi-error").first().textContent()), 10000);
   console.log("import error:", (await page.locator(".mdxi-error").first().textContent()).slice(0, 200));
 
-  // ArrayScope: a list component made with useValue (SPEC §4.2)
-  fs.writeFileSync(memberList, `import { useValue } from "mdxi";
+  // ArrayScope: a list component made with useField (SPEC §4.2)
+  fs.writeFileSync(memberList, `import { useField } from "mdxi";
 import { ArrayScope, TextInput } from "mdxi/components";
 export function MemberList({ name }: { name: string }) {
-  const [rows, setRows] = useValue<object[]>(name, []);
+  const { value: rows, setValue: setRows } = useField<object[]>(name, []);
   return (
     <ArrayScope name={name}>
       {rows.map((_, i) => (

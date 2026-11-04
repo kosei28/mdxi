@@ -1,7 +1,7 @@
-import { useValue } from "mdxi";
+import { useField } from "mdxi";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
-  const [value, setValue] = useValue(name, 0);
+  const { value, setValue, error } = useField(name, 0);
   return (
     <div style={{ fontSize: 24 }}>
       {Array.from({ length: max }, (_, i) => (
@@ -15,6 +15,7 @@ export function Rating({ name, max = 5 }: { name: string; max?: number }) {
           {i < value ? "★" : "☆"}
         </button>
       ))}
+      {error && <p style={{ color: "#cf222e", fontSize: 13 }}>{error}</p>}
     </div>
   );
 }

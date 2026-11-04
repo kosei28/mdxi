@@ -72,16 +72,18 @@ function useDefault(path: Path, defaultValue: unknown) {
   );
 }
 
-export interface FieldState<T> {
+export interface Field<T> {
   value: T;
   setValue: (value: T) => void;
-  path: Path;
-  /** Set when another mounted input uses the same path. */
+  /** Set while another mounted input uses the same path. The value is not saved then. */
   error?: string;
 }
 
-/** `useValue` plus the error state used by the standard components. */
-export function useField<T>(name: string, defaultValue?: T): FieldState<T> {
+/**
+ * Read and write the value `name` in the current scope.
+ * Any React component that calls it becomes an input component.
+ */
+export function useField<T = unknown>(name: string, defaultValue?: T): Field<T> {
   const store = useStore();
   const path = useChildPath(name, "入力");
   const key = pathKey(path);
@@ -95,16 +97,7 @@ export function useField<T>(name: string, defaultValue?: T): FieldState<T> {
   const error = snapshot.duplicates.has(key)
     ? `name "${formatPath(path)}" の入力が複数あります。保存先が重なるので、この値は保存されません。`
     : undefined;
-  return { value, setValue, path, error };
-}
-
-/**
- * Read and write the value `name` in the current scope.
- * Any React component that calls it becomes an input component.
- */
-export function useValue<T = unknown>(name: string, defaultValue?: T): [T, (value: T) => void] {
-  const { value, setValue } = useField(name, defaultValue);
-  return [value, setValue];
+  return { value, setValue, error };
 }
 
 export interface ScopeProps {

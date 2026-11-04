@@ -16,7 +16,7 @@ my-docs/
 ├── vite.config.ts                 # mdxi プラグイン（labels に status のサンプル）
 ├── tsconfig.json                  # paths で @/* → src/*
 ├── src/components/
-│   ├── Rating.tsx                 # useValue を使った入力コンポーネントのサンプル
+│   ├── Rating.tsx                 # useField を使った入力コンポーネントのサンプル
 │   └── Contact.mdx                # MDX の部品のサンプル
 └── docs/
     └── welcome.mdx                # サンプルのドキュメント

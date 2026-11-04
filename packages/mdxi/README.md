@@ -76,21 +76,28 @@ values:
 ## コンポーネントを作る（`mdxi`）
 
 ```tsx
-import { useValue } from "mdxi";
+import { useField } from "mdxi";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
-  const [value, setValue] = useValue(name, 0);
+  const { value, setValue, error } = useField(name, 0);
   return (
     <div>
       {Array.from({ length: max }, (_, i) => (
         <button key={i} type="button" onClick={() => setValue(i + 1)}>{i < value ? "★" : "☆"}</button>
       ))}
+      {error && <p>{error}</p>}
     </div>
   );
 }
 ```
 
-`useValue(name, defaultValue)` は、今のスコープの下の `name` を読み書きする。値は JSON で表せるものにする。npm パッケージとして配布する場合は、`mdxi` と `react` を `peerDependencies` にする。
+`useField(name, defaultValue)` は、今のスコープの下の `name` を読み書きする。
+
+- `value`: 今の値（未入力なら `defaultValue`）
+- `setValue(value)`: 値を変えて保存する。値は JSON で表せるものにする
+- `error`: 同じ保存先の入力がほかにも表示されているときのエラーメッセージ。このあいだ値は保存されない。表示はコンポーネントに任せる
+
+npm パッケージとして配布する場合は、`mdxi` と `react` を `peerDependencies` にする。
 
 ## CLI
 

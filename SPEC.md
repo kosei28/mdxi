@@ -124,7 +124,7 @@ import の解決は Vite に任せる。tsconfig の `paths`、相対パス、np
 
 - 入力コンポーネントには `name` を付ける。値はフロントマターの `values.<name>` に保存する。
 - name は、同じスコープ（§2.2）の中で一意にする。import した `.mdx` や、コンポーネントの中に置いた入力も対象。
-- 同じ保存先の入力が 2 つ表示されたら、ビューワーは両方をエラー表示にし、値を保存しない。
+- 同じ保存先の入力が 2 つ表示されたら、両方の入力に `useField` の `error`（§4.2）を渡してエラー表示にし、値を保存しない。
 - `mdxi check` は、本文と import した `.mdx` を読み、`name` 属性の重複を探してエラーにする。
 
 ### 2.2 スコープ
@@ -232,39 +232,45 @@ mdxi({
 
 ### 4.2 コンポーネントを作る（`mdxi`）
 
-拡張用の API は `useValue`（`mdxi`）と、スコープ（`ObjectScope` / `ArrayScope`、§2.2）だけ。
+拡張用の API は `useField`（`mdxi`）と、スコープ（`ObjectScope` / `ArrayScope`、§2.2）だけ。
 
 ```ts
-useValue<T>(name: string, defaultValue?: T): [T, (value: T) => void]
+useField<T>(name: string, defaultValue?: T): {
+  value: T;                    // 今の値（未入力なら defaultValue）
+  setValue: (value: T) => void; // 値を変えて保存する
+  error?: string;              // 同じ保存先の入力がほかにも表示されているときのエラー（§2.1）
+}
 ```
 
-- 普通の React コンポーネントの中で `useValue` を使えば、入力コンポーネントになる。標準コンポーネントも、この API で作られている。
-- `useValue` は、今のスコープの下の `name` を読み書きする。
+- 普通の React コンポーネントの中で `useField` を使えば、入力コンポーネントになる。標準コンポーネントも、この API で作られている。
+- `useField` は、今のスコープの下の `name` を読み書きする。
+- `error` があるあいだ、値は保存されない。エラーの表示はコンポーネントに任せる。
 
 ```tsx
 // src/components/Rating.tsx
-import { useValue } from "mdxi";
+import { useField } from "mdxi";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
-  const [value, setValue] = useValue(name, 0);
+  const { value, setValue, error } = useField(name, 0);
   return (
     <div>
       {Array.from({ length: max }, (_, i) => (
         <button key={i} onClick={() => setValue(i + 1)}>{i < value ? "★" : "☆"}</button>
       ))}
+      {error && <p>{error}</p>}
     </div>
   );
 }
 ```
 
-値はどんな JSON でもよい。行を追加できるリストは、`useValue` で配列を読み書きし、`ArrayScope` と `ArrayScope.Item` で各行のスコープを作れば作れる。行の中には、標準コンポーネントなど他の入力コンポーネントをそのまま置ける。
+値はどんな JSON でもよい。行を追加できるリストは、`useField` で配列を読み書きし、`ArrayScope` と `ArrayScope.Item` で各行のスコープを作れば作れる。行の中には、標準コンポーネントなど他の入力コンポーネントをそのまま置ける。
 
 ```tsx
-import { useValue } from "mdxi";
+import { useField } from "mdxi";
 import { ArrayScope, TextInput } from "mdxi/components";
 
 export function MemberList({ name }: { name: string }) {
-  const [rows, setRows] = useValue<object[]>(name, []);
+  const { value: rows, setValue: setRows } = useField<object[]>(name, []);
 
   return (
     <ArrayScope name={name}>
@@ -368,7 +374,7 @@ Skill はテンプレート（§8）に含め、プロジェクトの `.claude/s
 ├── vite.config.ts          # mdxi プラグイン。labels に status のサンプル
 ├── tsconfig.json           # paths で @/* → src/*
 ├── src/components/
-│   ├── Rating.tsx          # useValue を使った入力コンポーネントのサンプル
+│   ├── Rating.tsx          # useField を使った入力コンポーネントのサンプル
 │   └── Contact.mdx         # MDX の部品のサンプル
 └── docs/
     └── welcome.mdx         # 標準コンポーネント、Rating、Contact、ObjectScope、条件表示を使ったサンプル

@@ -83,24 +83,26 @@ import Contact from "@/components/Contact.mdx"
 
 ### コンポーネントを作る
 
-標準コンポーネントにない部品が必要なら、プロジェクトの中に React コンポーネントか `.mdx` を作って import する（置き場所は 1 で調べる）。入力コンポーネントは `useValue`（`mdxi`）で作る。
+標準コンポーネントにない部品が必要なら、プロジェクトの中に React コンポーネントか `.mdx` を作って import する（置き場所は 1 で調べる）。入力コンポーネントは `useField`（`mdxi`）で作る。
 
 ```tsx
-import { useValue } from "mdxi";
+import { useField } from "mdxi";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
-  const [value, setValue] = useValue(name, 0); // 今のスコープの下の name を読み書きする
+  // 今のスコープの下の name を読み書きする。error は name が重複しているときのメッセージ
+  const { value, setValue, error } = useField(name, 0);
   return (
     <div>
       {Array.from({ length: max }, (_, i) => (
         <button key={i} type="button" onClick={() => setValue(i + 1)}>{i < value ? "★" : "☆"}</button>
       ))}
+      {error && <p>{error}</p>}
     </div>
   );
 }
 ```
 
-値は JSON で表せるもの（文字列、数値、真偽値、null、配列、オブジェクト）にする。行を追加できるリストは、`useValue` で配列を読み書きし、各行を `ArrayScope` と `ArrayScope.Item` で包めば作れる。
+値は JSON で表せるもの（文字列、数値、真偽値、null、配列、オブジェクト）にする。行を追加できるリストは、`useField` で配列を読み書きし、各行を `ArrayScope` と `ArrayScope.Item` で包めば作れる。
 
 ## 3. 確認して、ユーザーに伝える
 
