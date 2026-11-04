@@ -1,0 +1,11 @@
+{
+  "name": "mdxi-monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r --filter ./packages/** build",
+    "test": "pnpm -r --filter ./packages/** test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "packageManager": "pnpm@11.28.2"
+}
