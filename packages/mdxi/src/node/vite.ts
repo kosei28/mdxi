@@ -138,7 +138,7 @@ async function readData(file: string, rel: string) {
 }
 
 /** Find why a module (or one of the modules it imports) fails to load. */
-async function diagnose(server: ViteDevServer, url: string, seen = new Set<string>()): Promise<string | null> {
+export async function diagnose(server: ViteDevServer, url: string, seen = new Set<string>()): Promise<string | null> {
   if (seen.has(url)) return null;
   seen.add(url);
   try {

@@ -1,0 +1,26 @@
+---
+values: {}
+---
+import { TextInput, ObjectScope, ArrayScope } from "mdxi/components"
+import Part from "./part.mdx"
+
+<TextInput name="a" />
+<TextInput name="a" />
+
+{props.values.x ? <TextInput name="b" /> : <TextInput name="b" />}
+
+<Part />
+
+<TextInput name="phone" />
+
+<ObjectScope name="s1"><Part /></ObjectScope>
+<ObjectScope name="s2"><Part /></ObjectScope>
+<ObjectScope name="s2"><Part /></ObjectScope>
+
+<ArrayScope name="list">
+  <ArrayScope.Item index={0}><TextInput name="n" /></ArrayScope.Item>
+  <ArrayScope.Item index={1}><TextInput name="n" /></ArrayScope.Item>
+  {[1, 2].map((_, i) => <ArrayScope.Item index={i} key={i}><TextInput name="n" /></ArrayScope.Item>)}
+</ArrayScope>
+
+<input name="html" /><input name="html" />
