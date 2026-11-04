@@ -15,7 +15,7 @@ export default defineConfig([
     target: "es2022",
     splitting: true,
     dts: true,
-    clean: true,
+    clean: false,
     external: ["react", "react-dom", "react/jsx-runtime"],
   },
   {

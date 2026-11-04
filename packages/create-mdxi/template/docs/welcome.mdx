@@ -1,0 +1,48 @@
+---
+labels:
+  status: open
+---
+
+import { Checkbox, NumberInput, ObjectScope, Select, TextInput } from "mdxi/components"
+import { Rating } from "@/components/Rating"
+import Contact from "@/components/Contact.mdx"
+
+# mdxi へようこそ
+
+このページは MDX で書かれたドキュメントです。入力した内容は、このファイルのフロントマターの `values` に自動で保存されます。上部の `status` はラベルで、`vite.config.ts` で項目を定義しています。
+
+## 標準コンポーネント
+
+<TextInput name="name" label="お名前" placeholder="山田 太郎" />
+
+<NumberInput name="people" label="人数" min={1} max={10} default={1} />
+
+<Select name="food" label="食べたいもの" options={["和食", "中華", "イタリアン"]} />
+
+<TextInput name="note" label="メモ" multiline />
+
+## 条件表示
+
+`props.values` で入力値を参照して、表示を切り替えられます。
+
+{props.values.food === "中華" && <Checkbox name="spicy" label="辛いものも OK" />}
+
+{props.values.food ? <p>{props.values.people} 人で{props.values.food}ですね。</p> : <p>食べたいものを選ぶと、ここが変わります。</p>}
+
+## 自作のコンポーネント
+
+`src/components/Rating.tsx` は、`useValue` で作った入力コンポーネントです。
+
+<Rating name="satisfaction" />
+
+## MDX の部品とスコープ
+
+`src/components/Contact.mdx` を 2 回使い、それぞれを `ObjectScope` で包んでいます。値は `values.applicant` と `values.emergency` に分かれて保存されます。
+
+### 申込者
+
+<ObjectScope name="applicant"><Contact /></ObjectScope>
+
+### 緊急連絡先
+
+<ObjectScope name="emergency"><Contact /></ObjectScope>

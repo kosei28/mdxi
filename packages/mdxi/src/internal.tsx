@@ -25,7 +25,7 @@ interface BoundaryState {
 }
 
 /** Shows an error in place of the part of the document that failed. */
-export class Boundary extends Component<{ children?: ReactNode; resetKey?: unknown }, BoundaryState> {
+export class Boundary extends Component<{ children?: ReactNode | (() => ReactNode); resetKey?: unknown }, BoundaryState> {
   override state: BoundaryState = { error: null };
 
   static getDerivedStateFromError(error: unknown): BoundaryState {
@@ -42,8 +42,14 @@ export class Boundary extends Component<{ children?: ReactNode; resetKey?: unkno
 
   override render() {
     if (this.state.error) return <ErrorBox error={this.state.error} />;
-    return this.props.children;
+    const { children } = this.props;
+    return typeof children === "function" ? <Lazy render={children} /> : children;
   }
+}
+
+/** Evaluates the children inside the boundary. */
+function Lazy({ render }: { render: () => ReactNode }) {
+  return <>{render()}</>;
 }
 
 export function ErrorBox({ error, title }: { error: unknown; title?: string }) {

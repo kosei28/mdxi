@@ -1,0 +1,19 @@
+{
+  "name": "mdxi-example-basic",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "check": "mdxi check"
+  },
+  "dependencies": {
+    "mdxi": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^8.0.0"
+  }
+}
