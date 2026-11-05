@@ -104,7 +104,7 @@ import { Select, Checkbox } from "mdxi/components"
 - 入力値とラベルは、MDX の `props` から参照する。
   - `props.values.<name>`
   - `props.labels.<key>`
-- 表示の切り替えは、普通の JS の式（`&&`、三項演算子、`.map()` など）で書く。
+- 表示の切り替えは、普通の JS の式（`&&`、三項演算子、`.map()` など）か、`Show`（§4.1）で書く。`Show` の中身は Markdown で書けるので、セクションごと出し分けるときに使う。
 - 使うコンポーネントは、標準コンポーネントも含めてすべて `import` する（グローバルに使えるコンポーネントはない）。
 
 ```mdx
@@ -227,8 +227,9 @@ mdxi({
 | `Checkbox` | boolean | `name`, `label` |
 | `ObjectScope` | — | `name`（§2.2） |
 | `ArrayScope`, `ArrayScope.Item` | — | `name` / `index`（§2.2） |
+| `Show` | — | `when`。`when` が真のときだけ中身を表示する。中身は Markdown で書ける |
 
-全コンポーネント共通で `default`（未入力時の値）を指定できる。それ以外の部品（表示用のコンポーネントなど）は提供しない。必要なものはユーザーが作る。
+入力コンポーネントには `default`（未入力時の値）を指定できる。表示用の部品は `Show` のほかは提供しない。必要なものはユーザーが作る。
 
 ### 4.2 コンポーネントを作る（`mdxi`）
 

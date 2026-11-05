@@ -70,8 +70,9 @@ values:
 | `Checkbox` | boolean | `name`, `label` |
 | `ObjectScope` | — | `name`。中の入力は `values.<name>.*` に保存される |
 | `ArrayScope`, `ArrayScope.Item` | — | `name` / `index`。中の入力は `values.<name>[index].*` に保存される |
+| `Show` | — | `when`。`when` が真のときだけ中身を表示する。中身は Markdown で書ける |
 
-すべてのコンポーネントに `default`（未入力のときの値）を指定できる。
+入力コンポーネントには `default`（未入力のときの値）を指定できる。
 
 ## コンポーネントを作る（`mdxi`）
 

@@ -48,7 +48,7 @@ import { Select, Checkbox, TextInput } from "mdxi/components"
 - 使うコンポーネントは、標準コンポーネントも含めてすべて `import` する（グローバルに使えるコンポーネントはない）。import の書き方は Vite と同じ（tsconfig の `paths`、相対パス、npm パッケージ）。
 - 入力コンポーネントには `name` を付ける。値はフロントマターの `values.<name>` に保存される。
 - 入力値は `props.values.<name>`、ラベルは `props.labels.<key>` で参照できる。表示の切り替えは普通の JS の式（`&&`、三項演算子、`.map()`）で書く。
-- 見出しや段落は、なるべく Markdown で書く。`{...}` の式の中は Markdown にならないが、コンポーネントの子要素は前後に空行を入れれば Markdown で書ける。セクションごとに出し分けるときは、`export const Show = ({ when, children }) => (when ? children : null)` のような小さなコンポーネントをドキュメントの中で定義して、`<Show when={...}>` の中に Markdown を書く。
+- 見出しや段落は、なるべく Markdown で書く。`{...}` の式の中は Markdown にならないが、コンポーネントの子要素は前後に空行を入れれば Markdown で書ける。セクションごとに出し分けるときは、`<Show when={...}>` の中に Markdown を書く。
 - `name` は同じスコープの中で一意にする。import した `.mdx` や、コンポーネントの中の入力も対象。重複するとビューワーでエラーになり、値が保存されない。
 - フロントマターの `values` と `labels` はビューワーが書き込むので、エージェントは書かない。ラベルが未設定のときは、スキーマの `default` が使われる。
 
@@ -62,8 +62,9 @@ import { Select, Checkbox, TextInput } from "mdxi/components"
 | `Checkbox` | boolean | `name`, `label` |
 | `ObjectScope` | — | `name` |
 | `ArrayScope`, `ArrayScope.Item` | — | `name` / `index` |
+| `Show` | — | `when`（真のときだけ中身を表示する） |
 
-すべてのコンポーネントに `default`（未入力のときの値）を指定できる。`default` はフロントマターには保存されない。
+入力コンポーネントには `default`（未入力のときの値）を指定できる。`default` はフロントマターには保存されない。
 
 ### スコープ
 

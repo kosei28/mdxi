@@ -170,3 +170,13 @@ export function Checkbox({ name, label, default: def }: CheckboxProps) {
     </Field>
   );
 }
+
+export interface ShowProps {
+  when: unknown;
+  children?: ReactNode;
+}
+
+/** Renders its children only while `when` is truthy. Children can be Markdown. */
+export function Show({ when, children }: ShowProps) {
+  return when ? <>{children}</> : null;
+}
