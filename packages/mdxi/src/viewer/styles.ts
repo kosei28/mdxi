@@ -146,7 +146,17 @@ select.mdxi-input {
   transition: background-color 0.15s;
 }
 .mdxi-option:has(input:checked) { background: var(--mdxi-accent-bg); color: var(--mdxi-accent-fg); }
-.mdxi-doc input[type="checkbox"], .mdxi-doc input[type="radio"] { accent-color: var(--mdxi-accent); width: 16px; height: 16px; margin: 0; }
+/* drawn by hand so the browser's own hover and focus styles don't show */
+.mdxi-option input[type="checkbox"] {
+  appearance: none; flex: none; width: 18px; height: 18px; margin: 0; border-radius: 6px; cursor: pointer;
+  background: var(--mdxi-island) center / 12px 12px no-repeat; box-shadow: 0 0 0 1.5px var(--mdxi-muted) inset;
+}
+.mdxi-option input[type="checkbox"]:checked {
+  background-color: var(--mdxi-accent); box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.mdxi-option input[type="checkbox"]:focus { outline: none; }
+.mdxi-option:has(input:focus-visible) { box-shadow: 0 0 0 3px var(--mdxi-accent-bg), 0 0 0 1.5px var(--mdxi-accent) inset; }
 .mdxi-field[data-error] .mdxi-input { background-color: var(--mdxi-danger-bg); box-shadow: 0 0 0 1.5px var(--mdxi-danger) inset; }
 .mdxi-field-error { color: var(--mdxi-danger-fg); font-size: 13px; margin: 6px 0 0 4px; }
 
