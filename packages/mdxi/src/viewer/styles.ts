@@ -64,7 +64,8 @@ button { font: inherit; color: inherit; }
 }
 .mdxi-tree a:hover, .mdxi-tree-dir:hover { background: var(--mdxi-hover); }
 .mdxi-tree a[aria-current="page"] { background: var(--mdxi-island); color: var(--mdxi-accent-fg); font-weight: 700; box-shadow: var(--mdxi-shadow); }
-.mdxi-tree-dir { color: var(--mdxi-muted); font-weight: 600; }
+.mdxi-tree-dir { font-weight: 600; }
+.mdxi-tree-dir::before { color: var(--mdxi-muted); }
 .mdxi-tree-dir::before {
   content: ""; flex: none; width: 6px; height: 6px; margin: 0 2px;
   border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; border-radius: 1px;
@@ -75,7 +76,8 @@ button { font: inherit; color: inherit; }
 
 /* main */
 .mdxi-main { overflow: auto; }
-.mdxi-page { display: flex; align-items: flex-start; gap: 16px; padding: 16px 16px 16px 0; }
+/* centered in the viewport when there is room: (viewport - doc - gap - labels) / 2 - sidebar */
+.mdxi-page { display: flex; align-items: flex-start; gap: 16px; padding: 16px 16px 16px max(0px, calc((100vw - 1096px) / 2 - 240px)); }
 .mdxi-doc, .mdxi-labels { background: var(--mdxi-island); border-radius: var(--mdxi-radius); box-shadow: var(--mdxi-shadow); }
 .mdxi-doc { flex: 1; min-width: 0; max-width: 860px; padding: 32px 44px 56px; }
 .mdxi-labels {
@@ -91,7 +93,6 @@ button { font: inherit; color: inherit; }
   border: 0; background: var(--mdxi-soft); color: inherit; border-radius: 999px;
   padding: 3px 12px; cursor: pointer; transition: background-color 0.15s, color 0.15s;
 }
-.mdxi-chip:hover { background: var(--mdxi-hover); }
 .mdxi-chip[aria-pressed="true"] { background: var(--mdxi-accent-bg); color: var(--mdxi-accent-fg); font-weight: 700; }
 .mdxi-empty { display: grid; place-items: center; min-height: 100%; color: var(--mdxi-muted); }
 .mdxi-status {
@@ -129,25 +130,23 @@ button { font: inherit; color: inherit; }
   background: var(--mdxi-soft); color: inherit; font: inherit;
   transition: background-color 0.15s, box-shadow 0.15s;
 }
-.mdxi-input:hover { background: var(--mdxi-hover); }
-.mdxi-input:focus { outline: none; background: var(--mdxi-island); box-shadow: 0 0 0 3px var(--mdxi-accent-bg), 0 0 0 1.5px var(--mdxi-accent) inset; }
+.mdxi-input:focus { outline: none; background-color: var(--mdxi-island); box-shadow: 0 0 0 3px var(--mdxi-accent-bg), 0 0 0 1.5px var(--mdxi-accent) inset; }
 .mdxi-input::placeholder { color: var(--mdxi-muted); opacity: 0.8; }
 select.mdxi-input {
   appearance: none; padding-right: 36px; cursor: pointer;
   background-image: linear-gradient(45deg, transparent 50%, var(--mdxi-muted) 50%), linear-gradient(135deg, var(--mdxi-muted) 50%, transparent 50%);
   background-position: right 18px center, right 13px center; background-size: 5px 5px; background-repeat: no-repeat;
 }
-.mdxi-textarea { max-width: 100%; resize: vertical; }
+.mdxi-textarea { display: block; resize: vertical; }
 .mdxi-options { display: flex; flex-wrap: wrap; gap: 8px; }
 .mdxi-option {
   display: inline-flex; gap: 8px; align-items: center; cursor: pointer;
   padding: 6px 14px 6px 10px; border-radius: 999px; background: var(--mdxi-soft);
   transition: background-color 0.15s;
 }
-.mdxi-option:hover { background: var(--mdxi-hover); }
 .mdxi-option:has(input:checked) { background: var(--mdxi-accent-bg); color: var(--mdxi-accent-fg); }
 .mdxi-doc input[type="checkbox"], .mdxi-doc input[type="radio"] { accent-color: var(--mdxi-accent); width: 16px; height: 16px; margin: 0; }
-.mdxi-field[data-error] .mdxi-input { background: var(--mdxi-danger-bg); box-shadow: 0 0 0 1.5px var(--mdxi-danger) inset; }
+.mdxi-field[data-error] .mdxi-input { background-color: var(--mdxi-danger-bg); box-shadow: 0 0 0 1.5px var(--mdxi-danger) inset; }
 .mdxi-field-error { color: var(--mdxi-danger-fg); font-size: 13px; margin: 6px 0 0 4px; }
 
 /* errors */
