@@ -4,12 +4,21 @@
   "description": "Interactive MDX documents for AI agents and humans",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosei28/mdxi.git",
+    "directory": "packages/mdxi-kit"
+  },
+  "homepage": "https://github.com/kosei28/mdxi/tree/main/packages/mdxi-kit#readme",
+  "bugs": {
+    "url": "https://github.com/kosei28/mdxi/issues"
+  },
   "files": [
     "dist",
     "client.d.ts"
   ],
   "bin": {
-    "mdxi": "./dist/cli.js"
+    "mdxi": "dist/cli.js"
   },
   "exports": {
     ".": {

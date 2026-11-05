@@ -4,7 +4,24 @@
   "description": "Create an mdxi project",
   "type": "module",
   "license": "MIT",
-  "bin": { "create-mdxi": "./index.js" },
-  "files": ["index.js", "template", "README.md"],
-  "engines": { "node": ">=20" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosei28/mdxi.git",
+    "directory": "packages/create-mdxi"
+  },
+  "homepage": "https://github.com/kosei28/mdxi/tree/main/packages/create-mdxi#readme",
+  "bugs": {
+    "url": "https://github.com/kosei28/mdxi/issues"
+  },
+  "bin": {
+    "create-mdxi": "index.js"
+  },
+  "files": [
+    "index.js",
+    "template",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
 }
