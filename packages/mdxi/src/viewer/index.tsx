@@ -94,7 +94,7 @@ function App({ config }: { config: ViewerConfig }) {
               <ErrorBox title="ドキュメントが見つかりません" error={path} />
             </div>
           ) : (
-            <DocView key={path} path={path} schema={config.labels} />
+            <DocView path={path} schema={config.labels} />
           )
         ) : (
           <div className="mdxi-empty">ドキュメントを選んでください</div>
@@ -211,8 +211,8 @@ class Saver {
 
 type Loaded =
   | { status: "loading" }
-  | { status: "error"; title: string; error: unknown }
-  | { status: "ready"; Content: ComponentType; store: DocStore; saver: Saver; frontmatterError?: string };
+  | { status: "error"; path: string; title: string; error: unknown }
+  | { status: "ready"; path: string; Content: ComponentType; store: DocStore; saver: Saver; frontmatterError?: string };
 
 function DocView({ path, schema }: { path: string; schema: LabelsSchema }) {
   const [state, setState] = useState<Loaded>({ status: "loading" });
@@ -238,9 +238,12 @@ function DocView({ path, schema }: { path: string; schema: LabelsSchema }) {
         schema,
         onChange: (next) => saver.schedule(next),
       });
-      if (!cancelled) setState({ status: "ready", Content: mod.default, store, saver, frontmatterError: data.error });
+      if (cancelled) return;
+      // Swap in one render so the previous document stays on screen while this one loads.
+      setSave({ kind: "idle" });
+      setState({ status: "ready", path, Content: mod.default, store, saver, frontmatterError: data.error });
     })().catch((error) => {
-      if (!cancelled) setState({ status: "error", title: error.title ?? "エラー", error });
+      if (!cancelled) setState({ status: "error", path, title: error.title ?? "エラー", error });
     });
     return () => {
       cancelled = true;
@@ -259,7 +262,7 @@ function DocView({ path, schema }: { path: string; schema: LabelsSchema }) {
 
   // The file changed on disk (an agent, an editor, or our own save).
   useHotEvent<{ path: string; values?: Values; labels?: Labels; error?: string }>("mdxi:data", (data) => {
-    if (data.path !== path || state.status !== "ready") return;
+    if (state.status !== "ready" || data.path !== state.path) return;
     if (data.error) {
       setState({ ...state, frontmatterError: data.error });
       return;
@@ -285,7 +288,7 @@ function DocView({ path, schema }: { path: string; schema: LabelsSchema }) {
         <article className="mdxi-doc">
           {state.frontmatterError && <ErrorBox title="フロントマターを読めません" error={state.frontmatterError} />}
           <Duplicates />
-          <Boundary resetKey={version}>
+          <Boundary resetKey={`${state.path}:${version}`}>
             <Content />
           </Boundary>
         </article>
