@@ -8,6 +8,8 @@ it("finds duplicate names across imported mdx and scopes", async () => {
   const dups = duplicates(fields).map((d) => [formatName(d.path), d.at.map((a) => `${path.basename(a.file)}:${a.line}`)]);
   expect(dups).toEqual([
     ["a", ["doc.mdx:7", "doc.mdx:8"]],
+    // branches of a ternary count too
+    ["b", ["doc.mdx:10", "doc.mdx:10"]],
     ["phone", ["part.mdx:3", "doc.mdx:14"]],
     ["s2.phone", ["part.mdx:3", "part.mdx:3"]],
   ]);

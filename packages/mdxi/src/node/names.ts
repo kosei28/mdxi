@@ -24,7 +24,8 @@ const processor = createProcessor({ remarkPlugins: [remarkFrontmatter, remarkGfm
 
 /**
  * Collect inputs with a static `name` in an MDX file and the `.mdx` files it imports.
- * Inputs in mutually exclusive branches (`a ? <X/> : <Y/>`) are not counted twice.
+ * Inputs in different branches (`a ? <X/> : <Y/>`) count too: a shared name would
+ * carry one branch's input over to the other.
  */
 export async function collectFields(file: string, resolve: Resolve, cache = new Map<string, Promise<Fields>>()): Promise<Fields> {
   let cached = cache.get(file);
@@ -142,10 +143,6 @@ async function collect(file: string, resolve: Resolve, cache: Map<string, Promis
       const at = { file, line: loc?.start.line, column: loc ? loc.start.column + 1 : undefined };
       return element(jsxName(opening.name), attrs, scope, at, (s) => fromEstree(el.children, s));
     }
-    if (n.type === "ConditionalExpression" || n.type === "IfStatement") {
-      const c = n as { test: unknown; consequent: unknown; alternate?: unknown };
-      return seq([fromEstree(c.test, scope), alt(fromEstree(c.consequent, scope), fromEstree(c.alternate ?? null, scope))]);
-    }
     const parts: Collected[] = [];
     for (const [key, value] of Object.entries(n)) {
       if (key === "loc" || key === "range" || key === "start" || key === "end") continue;
@@ -164,15 +161,6 @@ function seq(parts: Collected[]): Collected {
       const existing = out.get(key);
       out.set(key, existing ? { path: value.path, at: [...existing.at, ...value.at] } : value);
     }
-  }
-  return out;
-}
-
-function alt(a: Collected, b: Collected): Collected {
-  const out: Collected = new Map(a);
-  for (const [key, value] of b) {
-    const existing = out.get(key);
-    if (!existing || existing.at.length < value.at.length) out.set(key, value);
   }
   return out;
 }
