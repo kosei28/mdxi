@@ -33,8 +33,10 @@ try {
   await page.getByRole("heading", { name: "mdxi へようこそ" }).waitFor({ timeout: 15000 });
   const loads = navigations;
 
-  // input → saved to frontmatter, body untouched
-  const name = page.getByLabel("お名前");
+  // input → saved to frontmatter, body untouched; sections switch on the answer
+  assert.equal(await page.getByLabel("食べたいもの").count(), 0);
+  await page.getByLabel("参加しますか？").selectOption("yes");
+  const name = page.getByLabel("氏名").first();
   await name.click();
   await name.pressSequentially("佐藤");
   await page.getByLabel("食べたいもの").selectOption("中華");
@@ -44,14 +46,14 @@ try {
   await waitFor(() => fs.readFileSync(file, "utf8").includes("090-1111-2222"));
   await sleep(800);
   const saved = fs.readFileSync(file, "utf8");
-  assert.ok(saved.includes("name: 佐藤"), saved);
+  assert.ok(saved.includes("attend: \"yes\"") || saved.includes("attend: yes"), saved);
+  assert.ok(/applicant:\n\s+name: 佐藤\n\s+phone: 090-1111-2222/.test(saved), saved);
   assert.ok(saved.includes("food: 中華"));
   assert.ok(saved.includes("spicy: true"));
   assert.ok(saved.includes("satisfaction: 4"));
-  assert.ok(/applicant:\n\s+phone: 090-1111-2222/.test(saved), saved);
   assert.equal(saved.slice(saved.indexOf("import ")), original.slice(original.indexOf("import ")));
   assert.equal(navigations, loads, "no reload while typing");
-  assert.ok(await page.getByText("1 人で中華ですね。").isVisible());
+  assert.ok(await page.getByText("1 人で中華、辛いもの OK").isVisible());
   // focus kept after our own write came back
   await name.click();
   await name.press("End");
@@ -74,7 +76,7 @@ try {
   // external body change → reload and show new content
   fs.writeFileSync(file, fs.readFileSync(file, "utf8").replace("# mdxi へようこそ", "# mdxi へようこそ!"));
   await page.getByRole("heading", { name: "mdxi へようこそ!" }).waitFor({ timeout: 10000 });
-  assert.equal(await page.getByLabel("お名前").inputValue(), "佐藤さん");
+  assert.equal(await page.getByLabel("氏名").first().inputValue(), "佐藤さん");
 
   // file tree: add / remove
   const extra = path.resolve(dir, "docs/sub/extra.mdx");

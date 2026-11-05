@@ -7,42 +7,87 @@ import { Checkbox, NumberInput, ObjectScope, Select, TextInput } from "mdxi/comp
 import { Rating } from "@/components/Rating"
 import Contact from "@/components/Contact.mdx"
 
+export const Show = ({ when, children }) => (when ? children : null)
+
 # mdxi へようこそ
 
-このページは MDX で書かれたドキュメントです。入力した内容は、このファイルのフロントマターの `values` に自動で保存されます。`status` はラベルで、`vite.config.ts` で項目を定義しています。
+このページは MDX で書かれたドキュメントです。入力された答えに合わせて、表示される内容が動的に切り替わります。入力した内容は、このファイル（`docs/welcome.mdx`）のフロントマターの `values` に自動で保存されます。`status` は、このドキュメントの状態を表すラベルです。ラベルの項目は `vite.config.ts` で定義できます。
 
-## 標準コンポーネント
+## チームランチのお知らせ
 
-<TextInput name="name" label="お名前" placeholder="山田 太郎" />
+来週の金曜日、12 時からチームランチを開きます。
 
-<NumberInput name="people" label="人数" min={1} max={10} default={1} />
+<Select
+  name="attend"
+  label="参加しますか？"
+  options={[
+    { value: "yes", label: "参加する" },
+    { value: "no", label: "今回は見送る" },
+  ]}
+/>
+
+<Show when={props.values.attend === "yes"}>
+
+## お店の希望
 
 <Select name="food" label="食べたいもの" options={["和食", "中華", "イタリアン"]} />
 
-<TextInput name="note" label="メモ" multiline />
-
-## 条件表示
-
-`props.values` で入力値を参照して、表示を切り替えられます。
-
 {props.values.food === "中華" && <Checkbox name="spicy" label="辛いものも OK" />}
 
-{props.values.food ? <p>{props.values.people} 人で{props.values.food}ですね。</p> : <p>食べたいものを選ぶと、ここが変わります。</p>}
+{props.values.food === "イタリアン" && <Select name="course" label="コース" options={["パスタ", "ピザ", "どちらも"]} />}
+
+<Select name="avoid" label="苦手なもの" options={["魚介", "肉", "乳製品", "ナッツ"]} multiple />
+
+<NumberInput name="budget" label="予算（円）" min={500} max={5000} step={500} default={1500} />
+
+## 連絡先
+
+この欄は、`src/components/Contact.mdx` に自作した部品を読み込んでいます。
+
+<ObjectScope name="applicant">
+  <Contact />
+</ObjectScope>
+
+<Checkbox name="withGuest" label="ゲストを連れていく" />
+
+<Show when={props.values.withGuest}>
+
+### ゲスト
+
+<ObjectScope name="guest">
+  <Contact />
+</ObjectScope>
+
+</Show>
+
+## 確認
+
+{props.values.withGuest ? 2 : 1} 人で{props.values.food ? props.values.food + (props.values.course ? `（${props.values.course}）` : "") : "お店はおまかせ"}{props.values.spicy && "、辛いもの OK"}{props.values.avoid?.length > 0 && `、${props.values.avoid.join("・")}抜き`}、予算 {props.values.budget} 円で予約します。
+
+</Show>
+
+<Show when={props.values.attend === "no"}>
+
+## 見送りの理由
+
+<Select name="reason" label="理由" options={["予定がある", "在宅勤務の日", "その他"]} />
+
+{props.values.reason === "その他" && <TextInput name="reasonNote" label="くわしく" multiline />}
+
+<Checkbox name="nextTime" label="次の機会にも声をかけてほしい" default={true} />
+
+</Show>
+
+<Show when={!props.values.attend}>
+
+参加するかどうかを選ぶと、続きが表示されます。
+
+</Show>
 
 ## 自作のコンポーネント
 
-`src/components/Rating.tsx` は、`useField` で作った入力コンポーネントです。
+標準コンポーネントにない入力は、React で自作できます。下の星の評価は、`src/components/Rating.tsx` で自作したコンポーネントです。`useField` を使って値を読み書きしています。
+
+このページの使い心地はどうでしたか？
 
 <Rating name="satisfaction" />
-
-## MDX の部品とスコープ
-
-`src/components/Contact.mdx` を 2 回使い、それぞれを `ObjectScope` で包んでいます。値は `values.applicant` と `values.emergency` に分かれて保存されます。
-
-### 申込者
-
-<ObjectScope name="applicant"><Contact /></ObjectScope>
-
-### 緊急連絡先
-
-<ObjectScope name="emergency"><Contact /></ObjectScope>
