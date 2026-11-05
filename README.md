@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="packages/mdxi/src/icon.svg" alt="" width="96" height="96">
+  <img src="packages/mdxi-kit/src/icon.svg" alt="" width="96" height="96">
   <h1>mdxi</h1>
   <p>MDX Interactive</p>
 </div>
@@ -19,13 +19,13 @@ npm install
 npm run dev     # http://localhost:5173/welcome.mdx
 ```
 
-詳しくは [packages/mdxi/README.md](./packages/mdxi/README.md)。
+詳しくは [packages/mdxi-kit/README.md](./packages/mdxi-kit/README.md)。
 
 ## リポジトリの構成
 
 | ディレクトリ | 内容 |
 |---|---|
-| `packages/mdxi` | Vite プラグイン（`mdxi-kit/vite`）、標準コンポーネント（`mdxi-kit/components`）、`useField`（`mdxi-kit`）、CLI（`mdxi check`） |
+| `packages/mdxi-kit` | Vite プラグイン（`mdxi-kit/vite`）、標準コンポーネント（`mdxi-kit/components`）、`useField`（`mdxi-kit`）、CLI（`mdxi check`） |
 | `packages/create-mdxi` | `npm create mdxi <dir>` のテンプレート（エージェント向けの Skill を含む） |
 | `examples/basic` | テンプレートと同じ内容のサンプル（`mdxi-kit` はワークスペースのもの） |
 | `scripts/e2e.mjs` | ブラウザ（Chrome）での E2E |
@@ -34,7 +34,7 @@ npm run dev     # http://localhost:5173/welcome.mdx
 
 ```sh
 pnpm install
-pnpm build        # packages/mdxi をビルド
+pnpm build        # packages/mdxi-kit をビルド
 pnpm test         # ユニットテスト
 pnpm typecheck
 ```

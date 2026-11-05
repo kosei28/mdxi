@@ -16,7 +16,7 @@ importers:
     dependencies:
       mdxi-kit:
         specifier: workspace:*
-        version: link:../../packages/mdxi
+        version: link:../../packages/mdxi-kit
       react:
         specifier: ^19.0.0
         version: 19.3.1
@@ -36,7 +36,7 @@ importers:
 
   packages/create-mdxi: {}
 
-  packages/mdxi:
+  packages/mdxi-kit:
     dependencies:
       '@mdx-js/mdx':
         specifier: ^3.1.1
