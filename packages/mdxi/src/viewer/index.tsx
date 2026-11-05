@@ -45,6 +45,7 @@ function href(path: string) {
 function App({ config }: { config: ViewerConfig }) {
   const [path, setPath] = useState(currentPath);
   const [files, setFiles] = useState<string[] | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const loadTree = useCallback(() => {
     fetch("/__mdxi/tree")
@@ -69,14 +70,22 @@ function App({ config }: { config: ViewerConfig }) {
     event.preventDefault();
     history.pushState(null, "", href(next));
     setPath(next);
+    setMenuOpen(false);
   };
 
   return (
-    <div className="mdxi-app">
+    <div className="mdxi-app" data-menu={menuOpen ? "open" : undefined}>
       <nav className="mdxi-sidebar">
-        <div className="mdxi-sidebar-title">ドキュメント</div>
+        <div className="mdxi-brand">
+          <a href="/" onClick={navigate("")}>
+            mdxi
+          </a>
+          <button type="button" className="mdxi-menu" aria-label="ファイル一覧" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+            <span />
+          </button>
+        </div>
         {files && <Tree files={files} current={path} navigate={navigate} />}
-        {files?.length === 0 && <div className="mdxi-tree-dir">（まだありません）</div>}
+        {files?.length === 0 && <div className="mdxi-tree-empty">まだありません</div>}
       </nav>
       <main className="mdxi-main">
         {path && path.endsWith(".mdx") ? (
@@ -88,7 +97,7 @@ function App({ config }: { config: ViewerConfig }) {
             <DocView key={path} path={path} schema={config.labels} />
           )
         ) : (
-          <div className="mdxi-empty">左のリストからドキュメントを選んでください。</div>
+          <div className="mdxi-empty">ドキュメントを選んでください</div>
         )}
       </main>
     </div>
@@ -116,40 +125,43 @@ function buildTree(files: string[]): TreeNode {
   return root;
 }
 
-function Tree({
-  files,
-  current,
-  navigate,
-}: {
-  files: string[];
-  current: string;
-  navigate: (path: string) => (event: MouseEvent) => void;
-}) {
+function Tree({ files, current, navigate }: { files: string[]; current: string; navigate: (path: string) => (event: MouseEvent) => void }) {
   const root = useMemo(() => buildTree(files), [files]);
-  const render = (node: TreeNode) => {
-    const children = [...node.children.values()].sort(
-      (a, b) => Number(!!a.path) - Number(!!b.path) || a.name.localeCompare(b.name),
-    );
+  const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(() => new Set());
+  const toggle = (dir: string) =>
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (!next.delete(dir)) next.add(dir);
+      return next;
+    });
+  const render = (node: TreeNode, prefix: string) => {
+    const children = [...node.children.values()].sort((a, b) => Number(!!a.path) - Number(!!b.path) || a.name.localeCompare(b.name));
     return (
       <ul>
-        {children.map((child) =>
-          child.path ? (
+        {children.map((child) => {
+          if (child.path)
+            return (
+              <li key={child.name}>
+                <a href={href(child.path)} onClick={navigate(child.path)} aria-current={child.path === current ? "page" : undefined}>
+                  {child.name}
+                </a>
+              </li>
+            );
+          const dir = prefix + child.name;
+          const open = !collapsed.has(dir);
+          return (
             <li key={child.name}>
-              <a href={href(child.path)} onClick={navigate(child.path)} aria-current={child.path === current ? "page" : undefined}>
+              <button type="button" className="mdxi-tree-dir" aria-expanded={open} onClick={() => toggle(dir)}>
                 {child.name}
-              </a>
+              </button>
+              {open && render(child, dir + "/")}
             </li>
-          ) : (
-            <li key={child.name}>
-              <div className="mdxi-tree-dir">{child.name}/</div>
-              {render(child)}
-            </li>
-          ),
-        )}
+          );
+        })}
       </ul>
     );
   };
-  return <div className="mdxi-tree">{render(root)}</div>;
+  return <div className="mdxi-tree">{render(root, "")}</div>;
 }
 
 type SaveState = { kind: "idle" } | { kind: "saving" } | { kind: "saved" } | { kind: "error"; message: string };
@@ -269,15 +281,17 @@ function DocView({ path, schema }: { path: string; schema: LabelsSchema }) {
   const { Content, store } = state;
   return (
     <DocProvider store={store}>
-      <LabelsBar schema={schema} />
-      <article className="mdxi-doc">
-        {state.frontmatterError && <ErrorBox title="フロントマターを読めません" error={state.frontmatterError} />}
-        <Duplicates />
-        <Boundary resetKey={version}>
-          <Content />
-        </Boundary>
-      </article>
-      <div className="mdxi-status" aria-live="polite">
+      <div className="mdxi-page">
+        <article className="mdxi-doc">
+          {state.frontmatterError && <ErrorBox title="フロントマターを読めません" error={state.frontmatterError} />}
+          <Duplicates />
+          <Boundary resetKey={version}>
+            <Content />
+          </Boundary>
+        </article>
+        <LabelsBar schema={schema} />
+      </div>
+      <div className="mdxi-status" data-kind={save.kind} aria-live="polite">
         {save.kind === "saving" ? "保存中…" : save.kind === "saved" ? "保存しました" : save.kind === "error" ? `保存できませんでした: ${save.message}` : ""}
       </div>
     </DocProvider>
@@ -307,8 +321,9 @@ function LabelsBar({ schema }: { schema: LabelsSchema }) {
   const store = useStore();
   const { labels, storedLabels } = useSnapshot();
   const unknown = Object.keys(storedLabels).filter((key) => !(key in schema));
+  if (Object.keys(schema).length === 0 && unknown.length === 0) return null;
   return (
-    <div className="mdxi-labels">
+    <aside className="mdxi-labels">
       {Object.entries(schema).map(([key, def]) => {
         const value = labels[key];
         const title = def.description;
@@ -336,20 +351,24 @@ function LabelsBar({ schema }: { schema: LabelsSchema }) {
           return (
             <div key={key} className="mdxi-labels-item" title={title}>
               <span className="mdxi-labels-key">{key}</span>
-              {options.map((option) => {
-                const on = selected.includes(option);
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    className="mdxi-chip"
-                    aria-pressed={on}
-                    onClick={() => store.setLabel(key, on ? selected.filter((v) => v !== option) : options.filter((o) => o === option || selected.includes(o)))}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
+              <div className="mdxi-chips">
+                {options.map((option) => {
+                  const on = selected.includes(option);
+                  return (
+                    <button
+                      key={option}
+                      type="button"
+                      className="mdxi-chip"
+                      aria-pressed={on}
+                      onClick={() =>
+                        store.setLabel(key, on ? selected.filter((v) => v !== option) : options.filter((o) => o === option || selected.includes(o)))
+                      }
+                    >
+                      {option}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           );
         }
@@ -366,6 +385,6 @@ function LabelsBar({ schema }: { schema: LabelsSchema }) {
           {JSON.stringify(storedLabels[key])}
         </span>
       ))}
-    </div>
+    </aside>
   );
 }
