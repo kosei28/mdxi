@@ -62,7 +62,7 @@ button { font: inherit; color: inherit; }
   transition: background-color 0.15s;
 }
 .mdxi-tree a:hover, .mdxi-tree-dir:hover { background: var(--mdxi-hover); }
-.mdxi-tree a[aria-current="page"] { background: var(--mdxi-island); color: var(--mdxi-accent-fg); }
+.mdxi-tree a[aria-current="page"] { background: var(--mdxi-island); color: var(--mdxi-accent-fg); box-shadow: var(--mdxi-shadow); }
 .mdxi-tree-dir { font-weight: 600; }
 .mdxi-tree-dir::before { color: var(--mdxi-muted); }
 .mdxi-tree-dir::before {
@@ -186,7 +186,7 @@ select.mdxi-input {
     background: var(--mdxi-island); box-shadow: 0 12px 40px rgba(40, 90, 140, 0.18);
   }
   .mdxi-app[data-menu="open"] .mdxi-tree, .mdxi-app[data-menu="open"] .mdxi-tree-empty { display: block; }
-  .mdxi-tree a[aria-current="page"] { background: var(--mdxi-accent-bg); }
+  .mdxi-tree a[aria-current="page"] { background: var(--mdxi-accent-bg); box-shadow: none; }
   .mdxi-page { padding: 12px; }
   .mdxi-doc { padding: 22px 20px 40px; border-radius: 18px; }
   .mdxi-labels { border-radius: 18px; padding: 10px 14px; }
