@@ -7,14 +7,14 @@ labels:
   status: open
 ---
 
-import { Select } from "mdxi/components"
+import { Select } from "mdxi-kit/components"
 
 # Hello
 `;
 
 describe("frontmatter", () => {
   it("splits body", () => {
-    expect(split(doc).body).toBe(`\nimport { Select } from "mdxi/components"\n\n# Hello\n`);
+    expect(split(doc).body).toBe(`\nimport { Select } from "mdxi-kit/components"\n\n# Hello\n`);
   });
 
   it("writes values and labels only", () => {

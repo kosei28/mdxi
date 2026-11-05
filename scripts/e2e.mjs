@@ -81,7 +81,7 @@ try {
   // file tree: add / remove
   const extra = path.resolve(dir, "docs/sub/extra.mdx");
   fs.mkdirSync(path.dirname(extra), { recursive: true });
-  fs.writeFileSync(extra, `import { TextInput } from "mdxi/components"\nimport { Rating } from "@/components/Rating"\n\n# Extra\n\n<TextInput name="a" label="A" />\n\n<TextInput name="a" label="B" />\n\n<Rating name="r" />\n\n<Rating name="r" />\n\n{props.values.boom.x}\n`);
+  fs.writeFileSync(extra, `import { TextInput } from "mdxi-kit/components"\nimport { Rating } from "@/components/Rating"\n\n# Extra\n\n<TextInput name="a" label="A" />\n\n<TextInput name="a" label="B" />\n\n<Rating name="r" />\n\n<Rating name="r" />\n\n{props.values.boom.x}\n`);
   await page.getByRole("link", { name: "extra.mdx" }).waitFor({ timeout: 5000 });
   await page.getByRole("link", { name: "extra.mdx" }).click();
   await page.getByRole("heading", { name: "Extra" }).waitFor();
@@ -106,8 +106,8 @@ try {
   console.log("import error:", (await page.locator(".mdxi-error").first().textContent()).slice(0, 200));
 
   // ArrayScope: a list component made with useField (SPEC §4.2)
-  fs.writeFileSync(memberList, `import { useField } from "mdxi";
-import { ArrayScope, TextInput } from "mdxi/components";
+  fs.writeFileSync(memberList, `import { useField } from "mdxi-kit";
+import { ArrayScope, TextInput } from "mdxi-kit/components";
 export function MemberList({ name }: { name: string }) {
   const { value: rows, setValue: setRows } = useField<object[]>(name, []);
   return (
@@ -124,7 +124,7 @@ export function MemberList({ name }: { name: string }) {
   );
 }
 `);
-  fs.writeFileSync(extra, `import { MemberList } from "@/components/MemberList"\nimport { ArrayScope } from "mdxi/components"\n\n# Members\n\n<MemberList name="members" />\n\n<ArrayScope.Item index={0}>x</ArrayScope.Item>\n`);
+  fs.writeFileSync(extra, `import { MemberList } from "@/components/MemberList"\nimport { ArrayScope } from "mdxi-kit/components"\n\n# Members\n\n<MemberList name="members" />\n\n<ArrayScope.Item index={0}>x</ArrayScope.Item>\n`);
   await page.getByRole("heading", { name: "Members" }).waitFor({ timeout: 10000 });
   const errors = await page.locator(".mdxi-error").allTextContents();
   assert.ok(errors.some((t) => t.includes("ArrayScope.Item の外")), errors.join("|"));
@@ -145,7 +145,7 @@ export function MemberList({ name }: { name: string }) {
 
   // first save of a file without frontmatter → no reload
   const plain = path.resolve(dir, "docs/sub/plain.mdx");
-  fs.writeFileSync(plain, `import { TextInput } from "mdxi/components"\n\n# Plain\n\n<TextInput name="p" label="P" />\n`);
+  fs.writeFileSync(plain, `import { TextInput } from "mdxi-kit/components"\n\n# Plain\n\n<TextInput name="p" label="P" />\n`);
   await page.getByRole("link", { name: "plain.mdx" }).waitFor({ timeout: 5000 });
   await page.getByRole("link", { name: "plain.mdx" }).click();
   await page.getByLabel("P", { exact: true }).waitFor();

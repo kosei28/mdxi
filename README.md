@@ -25,9 +25,9 @@ npm run dev     # http://localhost:5173/welcome.mdx
 
 | ディレクトリ | 内容 |
 |---|---|
-| `packages/mdxi` | Vite プラグイン（`mdxi/vite`）、標準コンポーネント（`mdxi/components`）、`useField`（`mdxi`）、CLI（`mdxi check`） |
+| `packages/mdxi` | Vite プラグイン（`mdxi-kit/vite`）、標準コンポーネント（`mdxi-kit/components`）、`useField`（`mdxi-kit`）、CLI（`mdxi check`） |
 | `packages/create-mdxi` | `npm create mdxi <dir>` のテンプレート（エージェント向けの Skill を含む） |
-| `examples/basic` | テンプレートと同じ内容のサンプル（`mdxi` はワークスペースのもの） |
+| `examples/basic` | テンプレートと同じ内容のサンプル（`mdxi-kit` はワークスペースのもの） |
 | `scripts/e2e.mjs` | ブラウザ（Chrome）での E2E |
 
 ## 開発

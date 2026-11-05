@@ -7,14 +7,14 @@ MDX で書いたドキュメントをブラウザで開いて、ユーザーが�
 ## セットアップ
 
 ```sh
-npm install mdxi react react-dom
+npm install mdxi-kit react react-dom
 npm install -D vite
 ```
 
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import mdxi from "mdxi/vite";
+import mdxi from "mdxi-kit/vite";
 
 export default defineConfig({
   plugins: [
@@ -30,12 +30,12 @@ export default defineConfig({
 
 `vite` で dev server を起動し、`http://localhost:5173/<docs からのパス>` を開く。左にファイルツリー、右にドキュメントが表示される。
 
-`.mdx` の import に型を付けるには、tsconfig の `types` に `"mdxi/client"` を加える。
+`.mdx` の import に型を付けるには、tsconfig の `types` に `"mdxi-kit/client"` を加える。
 
 ## ドキュメント
 
 ```mdx
-import { Select, Checkbox } from "mdxi/components"
+import { Select, Checkbox } from "mdxi-kit/components"
 
 # 今日のランチ
 
@@ -60,7 +60,7 @@ values:
 - コンポーネントは、標準コンポーネントも含めてすべて `import` する。
 - `name` は同じスコープの中で一意にする。
 
-## 標準コンポーネント（`mdxi/components`）
+## 標準コンポーネント（`mdxi-kit/components`）
 
 | コンポーネント | 値 | 主な props |
 |---|---|---|
@@ -74,10 +74,10 @@ values:
 
 入力コンポーネントには `default`（未入力のときの値）を指定できる。
 
-## コンポーネントを作る（`mdxi`）
+## コンポーネントを作る（`mdxi-kit`）
 
 ```tsx
-import { useField } from "mdxi";
+import { useField } from "mdxi-kit";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
   const { value, setValue, error } = useField(name, 0);
@@ -98,7 +98,7 @@ export function Rating({ name, max = 5 }: { name: string; max?: number }) {
 - `setValue(value)`: 値を変えて保存する。値は JSON で表せるものにする
 - `error`: 同じ保存先の入力がほかにも表示されているときのエラーメッセージ。このあいだ値は保存されない。表示はコンポーネントに任せる
 
-npm パッケージとして配布する場合は、`mdxi` と `react` を `peerDependencies` にする。
+npm パッケージとして配布する場合は、`mdxi-kit` と `react` を `peerDependencies` にする。
 
 ## CLI
 

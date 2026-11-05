@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import mdxi from "mdxi/vite";
+import mdxi from "mdxi-kit/vite";
 
 export default defineConfig({
   plugins: [

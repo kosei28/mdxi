@@ -1,6 +1,6 @@
 # create-mdxi
 
-[mdxi](https://www.npmjs.com/package/mdxi) のプロジェクトを作る。
+[mdxi](https://www.npmjs.com/package/mdxi-kit) のプロジェクトを作る。
 
 ```sh
 npm create mdxi my-docs

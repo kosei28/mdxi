@@ -31,7 +31,7 @@ mdxi は、MDX で書いたドキュメントをブラウザで開いて、ユ�
 ドキュメントは、1 で調べたドキュメントのディレクトリの中に `.mdx` で作る。サブディレクトリに分けてもよい。
 
 ```mdx
-import { Select, Checkbox, TextInput } from "mdxi/components"
+import { Select, Checkbox, TextInput } from "mdxi-kit/components"
 
 # 今日のランチ
 
@@ -52,7 +52,7 @@ import { Select, Checkbox, TextInput } from "mdxi/components"
 - `name` は同じスコープの中で一意にする。import した `.mdx` や、コンポーネントの中の入力、同時には表示されない分岐（三項演算子や `Show`）の中の入力も対象（同じ `name` だと、切り替えたときに前の分岐の入力が引き継がれる）。重複するとビューワーでエラーになり、値が保存されない。
 - フロントマターの `values` と `labels` はビューワーが書き込むので、エージェントは書かない。ラベルが未設定のときは、スキーマの `default` が使われる。
 
-### 標準コンポーネント（`mdxi/components`）
+### 標準コンポーネント（`mdxi-kit/components`）
 
 | コンポーネント | 値 | 主な props |
 |---|---|---|
@@ -76,7 +76,7 @@ import { Select, Checkbox, TextInput } from "mdxi/components"
 - import した `.mdx` の中の `props.values` は、その `.mdx` が置かれたスコープの値になる。
 
 ```mdx
-import { ObjectScope } from "mdxi/components"
+import { ObjectScope } from "mdxi-kit/components"
 import Contact from "@/components/Contact.mdx"
 
 <ObjectScope name="applicant"><Contact /></ObjectScope>
@@ -85,10 +85,10 @@ import Contact from "@/components/Contact.mdx"
 
 ### コンポーネントを作る
 
-標準コンポーネントにない部品が必要なら、プロジェクトの中に React コンポーネントか `.mdx` を作って import する（置き場所は 1 で調べる）。入力コンポーネントは `useField`（`mdxi`）で作る。
+標準コンポーネントにない部品が必要なら、プロジェクトの中に React コンポーネントか `.mdx` を作って import する（置き場所は 1 で調べる）。入力コンポーネントは `useField`（`mdxi-kit`）で作る。
 
 ```tsx
-import { useField } from "mdxi";
+import { useField } from "mdxi-kit";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
   // 今のスコープの下の name を読み書きする。error は name が重複しているときのメッセージ

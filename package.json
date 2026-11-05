@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter mdxi run build",
-    "test": "pnpm --filter mdxi run test",
-    "typecheck": "pnpm --filter mdxi run typecheck"
+    "build": "pnpm --filter mdxi-kit run build",
+    "test": "pnpm --filter mdxi-kit run test",
+    "typecheck": "pnpm --filter mdxi-kit run typecheck"
   },
   "packageManager": "pnpm@11.28.2",
   "devDependencies": {

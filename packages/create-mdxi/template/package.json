@@ -7,7 +7,7 @@
     "check": "mdxi check"
   },
   "dependencies": {
-    "mdxi": "^0.1.0",
+    "mdxi-kit": "^0.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

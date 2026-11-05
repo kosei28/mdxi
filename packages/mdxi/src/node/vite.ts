@@ -43,7 +43,7 @@ export default function mdxi(options: MdxiOptions = {}): Plugin[] {
         resolve: { dedupe: ["react", "react-dom"] },
         optimizeDeps: {
           include: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"],
-          exclude: ["mdxi"],
+          exclude: ["mdxi-kit"],
         },
         ...(vite8
           ? { oxc: { jsx: { runtime: "automatic", importSource: "react" } } }
@@ -73,7 +73,7 @@ export default function mdxi(options: MdxiOptions = {}): Plugin[] {
       if (id !== ENTRY_ID) return null;
       const config = { labels: resolved.labels };
       return [
-        `import { mount } from "mdxi/viewer";`,
+        `import { mount } from "mdxi-kit/viewer";`,
         `mount(document.getElementById("mdxi-root"), ${JSON.stringify(config)});`,
       ].join("\n");
     },

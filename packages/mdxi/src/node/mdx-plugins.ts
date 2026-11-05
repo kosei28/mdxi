@@ -1,7 +1,7 @@
 import type { Expression, ImportDeclaration, Node, Program } from "estree";
 import type { Root, RootContent } from "mdast";
 
-const INTERNAL = "mdxi/internal";
+const INTERNAL = "mdxi-kit/internal";
 const BOUNDARY = "MdxiBoundary__";
 const WRAP = "withMdxiProps__";
 

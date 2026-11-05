@@ -1,4 +1,4 @@
-import { useField } from "mdxi";
+import { useField } from "mdxi-kit";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
   const { value, setValue, error } = useField(name, 0);

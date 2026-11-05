@@ -17,7 +17,7 @@ mdxi は **Vite プラグイン + React のライブラリ** として提供す�
 
 | 要素 | 内容 |
 |---|---|
-| npm パッケージ `mdxi` | Vite プラグイン（`mdxi/vite`）、標準コンポーネント（`mdxi/components`）、拡張用の API（`mdxi`）、CLI（`mdxi check`） |
+| npm パッケージ `mdxi-kit` | Vite プラグイン（`mdxi-kit/vite`）、標準コンポーネント（`mdxi-kit/components`）、拡張用の API（`mdxi-kit`）、CLI（`mdxi check`） |
 | npm パッケージ `create-mdxi` | プロジェクトのテンプレートを作る（`npm create mdxi`）。エージェント向けの Skill も含む |
 
 ### プロジェクトの構成
@@ -42,7 +42,7 @@ my-docs/
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import mdxi from "mdxi/vite";
+import mdxi from "mdxi-kit/vite";
 
 export default defineConfig({
   plugins: [
@@ -58,7 +58,7 @@ export default defineConfig({
 // package.json
 {
   "scripts": { "dev": "vite", "check": "mdxi check" },
-  "dependencies": { "mdxi": "^1.0.0", "react": "^19.0.0", "react-dom": "^19.0.0" },
+  "dependencies": { "mdxi-kit": "^1.0.0", "react": "^19.0.0", "react-dom": "^19.0.0" },
   "devDependencies": { "vite": "^8.0.0", "typescript": "^5.0.0" }
 }
 ```
@@ -80,7 +80,7 @@ values:
   spicy: true
 ---
 
-import { Select, Checkbox } from "mdxi/components"
+import { Select, Checkbox } from "mdxi-kit/components"
 
 # 今日のランチ
 
@@ -108,7 +108,7 @@ import { Select, Checkbox } from "mdxi/components"
 - 使うコンポーネントは、標準コンポーネントも含めてすべて `import` する（グローバルに使えるコンポーネントはない）。
 
 ```mdx
-import { TextInput } from "mdxi/components"
+import { TextInput } from "mdxi-kit/components"
 import { Rating } from "@/components/Rating"
 import Contact from "@/components/Contact.mdx"
 import { Gantt } from "some-mdxi-package"
@@ -137,7 +137,7 @@ import の解決は Vite に任せる。tsconfig の `paths`、相対パス、np
 | `<ArrayScope name="x">` + `<ArrayScope.Item index={i}>` | `values.x`（配列）。`ArrayScope.Item` の中の入力は、i 番目の要素のプロパティになる |
 
 ```mdx
-import { ObjectScope } from "mdxi/components"
+import { ObjectScope } from "mdxi-kit/components"
 import Contact from "@/components/Contact.mdx"
 
 <ObjectScope name="applicant"><Contact /></ObjectScope>
@@ -146,7 +146,7 @@ import Contact from "@/components/Contact.mdx"
 
 ```mdx
 {/* src/components/Contact.mdx */}
-import { TextInput } from "mdxi/components"
+import { TextInput } from "mdxi-kit/components"
 
 <TextInput name="phone" label="電話番号" />
 ```
@@ -217,7 +217,7 @@ mdxi({
 
 ## 4. コンポーネント
 
-### 4.1 標準コンポーネント（`mdxi/components`）
+### 4.1 標準コンポーネント（`mdxi-kit/components`）
 
 | コンポーネント | 値 | 主な props |
 |---|---|---|
@@ -231,9 +231,9 @@ mdxi({
 
 入力コンポーネントには `default`（未入力時の値）を指定できる。表示用の部品は `Show` のほかは提供しない。必要なものはユーザーが作る。
 
-### 4.2 コンポーネントを作る（`mdxi`）
+### 4.2 コンポーネントを作る（`mdxi-kit`）
 
-拡張用の API は `useField`（`mdxi`）と、スコープ（`ObjectScope` / `ArrayScope`、§2.2）だけ。
+拡張用の API は `useField`（`mdxi-kit`）と、スコープ（`ObjectScope` / `ArrayScope`、§2.2）だけ。
 
 ```ts
 useField<T>(name: string, defaultValue?: T): {
@@ -249,7 +249,7 @@ useField<T>(name: string, defaultValue?: T): {
 
 ```tsx
 // src/components/Rating.tsx
-import { useField } from "mdxi";
+import { useField } from "mdxi-kit";
 
 export function Rating({ name, max = 5 }: { name: string; max?: number }) {
   const { value, setValue, error } = useField(name, 0);
@@ -267,8 +267,8 @@ export function Rating({ name, max = 5 }: { name: string; max?: number }) {
 値はどんな JSON でもよい。行を追加できるリストは、`useField` で配列を読み書きし、`ArrayScope` と `ArrayScope.Item` で各行のスコープを作れば作れる。行の中には、標準コンポーネントなど他の入力コンポーネントをそのまま置ける。
 
 ```tsx
-import { useField } from "mdxi";
-import { ArrayScope, TextInput } from "mdxi/components";
+import { useField } from "mdxi-kit";
+import { ArrayScope, TextInput } from "mdxi-kit/components";
 
 export function MemberList({ name }: { name: string }) {
   const { value: rows, setValue: setRows } = useField<object[]>(name, []);
@@ -295,7 +295,7 @@ values:
     - { name: 鈴木, role: pm }
 ```
 
-作ったコンポーネントは、プロジェクトの中に置いて import するか、npm パッケージにして配布する。npm パッケージにする場合は、`mdxi` と `react` を `peerDependencies` にする。
+作ったコンポーネントは、プロジェクトの中に置いて import するか、npm パッケージにして配布する。npm パッケージにする場合は、`mdxi-kit` と `react` を `peerDependencies` にする。
 
 ---
 

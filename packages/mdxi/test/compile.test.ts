@@ -10,8 +10,8 @@ it("wraps blocks and the default export, drops frontmatter", async () => {
       recmaPlugins: [recmaMdxiWrap],
     }),
   );
-  expect(out).toContain('import {Boundary as MdxiBoundary__} from "mdxi/internal"');
-  expect(out).toContain('import {withMdxiProps as withMdxiProps__} from "mdxi/internal"');
+  expect(out).toContain('import {Boundary as MdxiBoundary__} from "mdxi-kit/internal"');
+  expect(out).toContain('import {withMdxiProps as withMdxiProps__} from "mdxi-kit/internal"');
   expect(out).toContain("export default withMdxiProps__(MDXContent)");
   expect(out.match(/MdxiBoundary__, {\n?\s*children: \(\) =>/g)?.length).toBe(2);
   expect(out).not.toContain("secret");
