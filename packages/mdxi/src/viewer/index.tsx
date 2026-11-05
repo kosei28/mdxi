@@ -4,6 +4,7 @@ import { DocProvider, useSnapshot, useStore } from "../runtime/context";
 import { DocStore, type Labels, type LabelsSchema, type Values } from "../runtime/store";
 import { Boundary, ErrorBox } from "../internal";
 import { styles } from "./styles";
+import icon from "../icon.svg";
 
 export interface ViewerConfig {
   labels: LabelsSchema;
@@ -78,6 +79,7 @@ function App({ config }: { config: ViewerConfig }) {
       <nav className="mdxi-sidebar">
         <div className="mdxi-brand">
           <a href="/" onClick={navigate("")}>
+            <span className="mdxi-brand-icon" aria-hidden dangerouslySetInnerHTML={{ __html: icon }} />
             mdxi
           </a>
           <button type="button" className="mdxi-menu" aria-label="ファイル一覧" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>

@@ -1,3 +1,5 @@
+<img src="packages/mdxi/src/icon.svg" alt="" width="64" height="64">
+
 # mdxi
 
 MDX Interactive — AI エージェントがユーザー向けの UI を MDX で書き、ユーザーがブラウザで入力するためのツール。入力した値はドキュメントのフロントマターに保存され、エージェントはそれを読んで作業を進める。

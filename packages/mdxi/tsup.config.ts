@@ -16,6 +16,7 @@ export default defineConfig([
     splitting: true,
     dts: true,
     clean: false,
+    loader: { ".svg": "text" },
     external: ["react", "react-dom", "react/jsx-runtime"],
   },
   {
@@ -30,6 +31,7 @@ export default defineConfig([
     splitting: true,
     dts: { entry: { vite: "src/node/vite.ts" } },
     clean: false,
+    loader: { ".svg": "text" },
     external: ["vite"],
   },
 ]);

@@ -9,6 +9,7 @@ import { version as viteVersion, type Plugin, type ViteDevServer } from "vite";
 import { readFrontmatter, split, writeFrontmatter } from "./frontmatter";
 import { recmaMdxiWrap, remarkMdxiBoundaries } from "./mdx-plugins";
 import { docPath, moduleUrl, resolveOptions, type MdxiOptions, type ResolvedOptions } from "./options";
+import icon from "../icon.svg";
 
 export type { MdxiOptions, LabelSchema, LabelsSchema } from "./options";
 
@@ -232,6 +233,7 @@ const SHELL = `<!doctype html>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>mdxi</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${encodeURIComponent(icon)}" />
   </head>
   <body>
     <div id="mdxi-root"></div>

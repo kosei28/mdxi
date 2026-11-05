@@ -50,7 +50,9 @@ button { font: inherit; color: inherit; }
 /* sidebar */
 .mdxi-sidebar { overflow: auto; padding: 20px 12px 24px 16px; font-size: 14px; }
 .mdxi-brand { display: flex; align-items: center; justify-content: space-between; padding: 0 10px 14px; }
-.mdxi-brand a { font-size: 20px; font-weight: 800; letter-spacing: 0.02em; color: var(--mdxi-accent-fg); text-decoration: none; }
+.mdxi-brand a { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; letter-spacing: 0.02em; color: var(--mdxi-accent-fg); text-decoration: none; }
+.mdxi-brand-icon { display: block; width: 26px; height: 26px; }
+.mdxi-brand-icon svg { display: block; width: 100%; height: 100%; }
 .mdxi-menu { display: none; }
 .mdxi-tree, .mdxi-tree ul { list-style: none; margin: 0; padding: 0; }
 .mdxi-tree ul ul { padding-left: 14px; }
