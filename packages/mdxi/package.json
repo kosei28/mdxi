@@ -38,6 +38,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsup",
+    "prepublishOnly": "pnpm run build",
     "dev": "tsup --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
