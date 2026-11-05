@@ -75,8 +75,8 @@ button { font: inherit; color: inherit; }
 
 /* main */
 .mdxi-main { overflow: auto; }
-/* centered in the viewport when there is room: (viewport - doc - gap - labels) / 2 - sidebar */
-.mdxi-page { display: flex; align-items: flex-start; gap: 16px; padding: 16px 16px 16px max(0px, calc((100vw - 1096px) / 2 - 240px)); }
+/* the document is centered in the viewport when there is room: (viewport - doc) / 2 - sidebar */
+.mdxi-page { display: flex; align-items: flex-start; gap: 16px; padding: 16px 16px 16px max(0px, calc((100vw - 860px) / 2 - 240px)); }
 .mdxi-doc, .mdxi-labels { background: var(--mdxi-island); border-radius: var(--mdxi-radius); box-shadow: var(--mdxi-shadow); }
 .mdxi-doc { flex: 1; min-width: 0; max-width: 860px; padding: 32px 44px 56px; }
 .mdxi-labels {
