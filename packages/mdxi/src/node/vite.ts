@@ -80,7 +80,7 @@ export default function mdxi(options: MdxiOptions = {}): Plugin[] {
 
     transform(code, id) {
       const [file] = id.split("?");
-      if (file.endsWith(".mdx")) bodies.set(file, split(code).body);
+      if (file.endsWith(".mdx")) bodies.set(file, bodyOf(code));
       return null;
     },
 
@@ -88,10 +88,9 @@ export default function mdxi(options: MdxiOptions = {}): Plugin[] {
       if (!file.endsWith(".mdx")) return;
       const previous = bodies.get(file);
       if (previous === undefined) return;
-      const { body } = split(await read());
       // Only the frontmatter changed: the compiled module is the same, so skip HMR.
       // The new values and labels are sent by the watcher below.
-      if (body === previous) return [];
+      if (bodyOf(await read()) === previous) return [];
     },
 
     configureServer(server) {
@@ -225,6 +224,14 @@ async function handle(server: ViteDevServer, options: ResolvedOptions, req: Inco
     return true;
   }
   return false;
+}
+
+/**
+ * The body without leading blank lines. The first save of a file without
+ * frontmatter puts a blank line between the new frontmatter and the body.
+ */
+function bodyOf(source: string) {
+  return split(source).body.replace(/^(?:[ \t]*\r?\n)+/, "");
 }
 
 const SHELL = `<!doctype html>

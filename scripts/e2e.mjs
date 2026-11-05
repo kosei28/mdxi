@@ -143,6 +143,19 @@ export function MemberList({ name }: { name: string }) {
   assert.ok(/members:\n\s+- name: 鈴木\n---/.test(fs.readFileSync(extra, "utf8")), fs.readFileSync(extra, "utf8"));
   assert.equal(await page.getByLabel("名前0").inputValue(), "鈴木");
 
+  // first save of a file without frontmatter → no reload
+  const plain = path.resolve(dir, "docs/sub/plain.mdx");
+  fs.writeFileSync(plain, `import { TextInput } from "mdxi/components"\n\n# Plain\n\n<TextInput name="p" label="P" />\n`);
+  await page.getByRole("link", { name: "plain.mdx" }).waitFor({ timeout: 5000 });
+  await page.getByRole("link", { name: "plain.mdx" }).click();
+  await page.getByLabel("P", { exact: true }).waitFor();
+  const before = navigations;
+  await page.getByLabel("P", { exact: true }).pressSequentially("abc");
+  await waitFor(() => fs.readFileSync(plain, "utf8").includes("p: abc"));
+  await sleep(1000);
+  assert.equal(navigations, before, "no reload on the first save");
+  assert.equal(await page.getByLabel("P", { exact: true }).inputValue(), "abc");
+
   fs.rmSync(path.dirname(extra), { recursive: true });
   await waitFor(async () => (await page.getByRole("link", { name: "extra.mdx" }).count()) === 0);
   console.log("OK");
