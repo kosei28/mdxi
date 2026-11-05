@@ -62,7 +62,7 @@ button { font: inherit; color: inherit; }
   transition: background-color 0.15s;
 }
 .mdxi-tree a:hover, .mdxi-tree-dir:hover { background: var(--mdxi-hover); }
-.mdxi-tree a[aria-current="page"] { background: var(--mdxi-island); color: var(--mdxi-accent-fg); font-weight: 700; }
+.mdxi-tree a[aria-current="page"] { background: var(--mdxi-island); color: var(--mdxi-accent-fg); }
 .mdxi-tree-dir { font-weight: 600; }
 .mdxi-tree-dir::before { color: var(--mdxi-muted); }
 .mdxi-tree-dir::before {
