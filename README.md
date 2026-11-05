@@ -1,8 +1,10 @@
-<img src="packages/mdxi/src/icon.svg" alt="" width="64" height="64">
+<div align="center">
+  <img src="packages/mdxi/src/icon.svg" alt="" width="96" height="96">
+  <h1>mdxi</h1>
+  <p>MDX Interactive</p>
+</div>
 
-# mdxi
-
-MDX Interactive — AI エージェントがユーザー向けの UI を MDX で書き、ユーザーがブラウザで入力するためのツール。入力した値はドキュメントのフロントマターに保存され、エージェントはそれを読んで作業を進める。
+AI エージェントがユーザー向けの UI を MDX で書き、ユーザーがブラウザで入力するためのツール。入力した値はドキュメントのフロントマターに保存され、エージェントはそれを読んで作業を進める。
 
 ![mdxi のビューワー](assets/screenshot.png)
 
